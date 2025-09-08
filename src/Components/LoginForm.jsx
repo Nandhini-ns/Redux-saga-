@@ -13,7 +13,7 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
-  const { loading, user, error } = useSelector((state) => state.auth);
+  const { loading, user, error,otpSent } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ function LoginForm() {
     }
     if(!isValid) return;
 
-    dispatch(loginRequest({ userName: username, password }));
+    dispatch(loginRequest({username, password }));
 
     //clear input fields
     setUsername("");
