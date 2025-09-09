@@ -1,47 +1,113 @@
-
 import { takeLatest, put, call } from "redux-saga/effects";
 import { LOGIN_REQUEST, OTP_RESEND_REQUEST, OTP_VERIFY_REQUEST } from "../Types/LoginForm_Types";
-import { loginSuccess, loginFailure, otpVerifySuccess, otpResendFailure, otpResendSuccess, otpSent } from "../Actions/Authlogin_Action";
+import { 
+  loginSuccess, 
+  loginFailure, 
+  otpVerifySuccess, 
+  otpResendFailure, 
+  otpResendSuccess, 
+  otpSent, 
+  otpVerifyFailure 
+} from "../Actions/Authlogin_Action";
 import { loginApi, resendOtpApi, verifyOtpApi } from "../../Service/LoginForm_Service";
-
 function* handleLogin(action) {
   try {
+    // Log the payload being sent
+    console.log("Login payload:", action.payload);
+
+    // Call the login API
     const response = yield call(loginApi, action.payload);
+
+    // Log full API response
+    console.log("Login API response:", response.data);
+
+    //  Extract JWT token safely
+    const token = response.data?.data?.jwt;
+    if (token) {
+      localStorage.setItem("authToken", token);
+      console.log("Token stored in localStorage:", localStorage.getItem("authToken"));
+    } else {
+      console.warn("JWT token not found in response");
+    }
+
+    // store other info if backend returns opaque or userId
+    const opaque = response.data?.data?.opaque;
+    if (opaque) localStorage.setItem("opaque", opaque);
+
+    //  Dispatch login success
     yield put(loginSuccess(response.data));
+    console.log("Login success action dispatched");
+
+    //Dispatch OTP sent action to open OTP modal
     yield put(otpSent());
+    console.log("OTP sent action dispatched, modal should open");
   } catch (error) {
+    // Catch any errors and log fully
     const errorMsg =
-      error.response?.data?.error?.message || // backend la { error: { message: "..." } }
-      error.response?.data?.message ||        // backend la { message: "..." }
-      error.message ||                        // axios la default message
+      error.response?.data?.error?.message ||
+      error.response?.data?.message ||
+      error.message ||
       "Login Failed";
 
+    console.error("Login error:", errorMsg);
     yield put(loginFailure(errorMsg));
   }
 }
 
-//OTP Verify 
-function* handleOtpVerify(action){
-  try{
-    const response = yield call (verifyOtpApi, action.payload);
-    yield put(otpVerifySuccess(response.data?.message || "OTP Verified Successfully"));
-  } catch(error){
-    const errorMsg = error.response?.data?.error?.message || error.response?.data?.message || error.message || "OTP Verification Failed";
-    yield put(otpResendFailure(errorMsg));
+//  OTP VERIFY SAGA 
+function* handleOtpVerify(action) {
+  try {
+    const jwtToken = localStorage.getItem("authToken");
+    const opaque = localStorage.getItem("opaque");
+    const accessCode = action.payload?.accessCode; // from input
+
+    console.log("Verifying OTP with payload:", { opaque, accessCode }, "JWT:", jwtToken);
+
+    const payload = { opaque, accessCode };
+
+    const response = yield call(verifyOtpApi, payload, jwtToken);
+    console.log("OTP verify response:", response.data);
+
+    if (response.data?.data?.isValidAccessCode) {
+      yield put(otpVerifySuccess("OTP Verified Successfully!"));
+    } else {
+      // yield put(otpVerifyFailure("Invalid OTP. Please try again."));
+    }
+  } catch (error) {
+    console.error("OTP verify error:", error.response || error);
+    yield put(otpVerifyFailure("OTP Verification Failed"));
   }
 }
 
-//Resend OTP 
-function* handleOtpResend(action) {
-  try{
-    const response = yield call(resendOtpApi, action.payload);
+function* handleOtpResend() {
+  try {
+    const jwtToken = localStorage.getItem("authToken"); // JWT from login
+    const opaque = localStorage.getItem("opaque");      // Opaque from login
+
+    if (!jwtToken || !opaque) {
+      throw new Error("Missing JWT token or opaque value");
+    }
+
+    const payload = { opaque };
+
+    console.log(" Resend OTP payload:", payload, "JWT:", jwtToken);
+
+    const response = yield call(resendOtpApi, payload, jwtToken);
+
+    console.log("Resend OTP response:", response.data);
+
     yield put(otpResendSuccess(response.data?.message || "OTP Resent Successfully"));
-  } catch(error){
-    const errorMsg = error.response?.data?.error?.message || error.response?.data?.message || error.message || "OTP Resent Failed";
+  } catch (error) {
+    const errorMsg =
+      error.response?.data?.error?.message ||
+      error.response?.data?.message ||
+      error.message ||
+      "OTP Resend Failed";
+
+   
     yield put(otpResendFailure(errorMsg));
   }
 }
-
 
 export default function* authloginSaga() {
   yield takeLatest(LOGIN_REQUEST, handleLogin);

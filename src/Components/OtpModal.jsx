@@ -5,54 +5,8 @@ import{
     otpVerifyRequest,
     otpResendRequest,
 }from "../Redux_saga/Actions/Authlogin_Action";
+import { toast } from 'react-toastify';
 // import "bootstrap/dist/css/bootstrap.min.css";
-
-
-
-// const OtpModal = () => {
-//     const [otp,setOtp] = useState("");
-//     const dispatch = useDispatch();
-//     const {loading, error, otpMessage, user } = useSelector((state)=>state.auth);
-
-//     const handleVerify = () =>{dispatch(otpVerifyRequest({userId:user?.id, otp}));
-//    };
-
-//     const handleResend = () => { dispatch(otpResendRequest(user?.id));
-//   };
-
-
-//   return (
-//     <div className="modal show d-block" tabIndex="-1">
-//         <div className="modal-dialog modal-dialog-centered">
-//             <div className="modal-content p-4">
-//                 <h5 className="modal-title text-center mb-3">OTP Verification</h5>
-
-//                 <input type="text" className="form-control mb-3"
-//                 placeholder="Enter OTP"
-//                 value={otp}
-//                 onChange={(e) => setOtp(e.target.value)}/>
-
-//               <button className="btn btn-success w-100 mb-2"
-//                  onClick={handleVerify}
-//                  disabled={loading}>
-//                     {loading? "Verifying..." : "Verify OTP"}
-//               </button>
-
-//               <button  className="btn btn-link w-100" onClick={handleResend} disabled={loading}>
-//                 Resend OTP
-//               </button>
-
-//               {otpMessage &&(
-//                 <p className="text-success text-center mt-2">{otpMessage}</p>
-//               )}
-//               {error && <p className="text-danger text-center mt-2">{error}</p>}
-//             </div>
-//         </div>
-      
-//     </div>
-//   );
-// }
-
     function OtpModal({ onClose }) {
   const dispatch = useDispatch();
   const { user, otpMessage, error } = useSelector((state) => state.auth);
@@ -61,6 +15,7 @@ import{
   const [timer, setTimer] = useState(30);
   const [disabled, setDisabled] = useState(true);
   const [prefix, setPrefix] = useState("");
+ 
 
   // Generate random letters
   const generatePrefix = () => {
@@ -77,6 +32,7 @@ import{
 useEffect(() => {
   const randomOtp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
   setDemoOtp(randomOtp);
+  setOtp("");
 }, [otpMessage]);
 
 
@@ -100,18 +56,26 @@ useEffect(() => {
     return () => clearInterval(interval);
   }, [otpMessage]);
 
-  const handleVerify = () => {
-    if (!otp) {
-      alert("Please enter OTP!");
-      return;
-    }
-    dispatch(otpVerifyRequest({ userid: user?.id, otp }));
-  };
+  
 
-  const handleResend = () => {
-    dispatch(otpResendRequest(user?.id));
-    alert("OTP Resent Successfully!");
-  };
+const handleVerify = () => {
+  if (!otp) {
+   toast.error("Please enter OTP!");
+    return;
+  }
+dispatch(otpVerifyRequest({ accessCode: otp })); 
+setOtp("");
+};
+
+
+const handleResend = () => {
+  dispatch(otpResendRequest()); 
+  // alert("OTP Resent Successfully!");
+   const randomOtp = Math.floor(100000 + Math.random() * 900000);
+    setDemoOtp(randomOtp);
+    setOtp(""); // clear input after resend
+    toast.info("OTP Resent Successfully!");
+};
 
   return (
     <div className="modal show fade d-block" tabIndex="-1" role="dialog" style={{ background: "rgba(0,0,0,0.6)" }}>
@@ -169,6 +133,9 @@ useEffect(() => {
   );
     }
 export default OtpModal;
+
+
+
 
 
 

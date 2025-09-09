@@ -1,6 +1,4 @@
 
-
-// import { otpSent } from "../Actions/Authlogin_Action";
 import { LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, OTP_RESEND_FAILURE, OTP_RESEND_REQUEST, OTP_RESEND_SUCCESS, OTP_SENT, OTP_VERIFY_FAILURE, OTP_VERIFY_REQUEST, OTP_VERIFY_SUCCESS } from "../Types/LoginForm_Types";
 
 
