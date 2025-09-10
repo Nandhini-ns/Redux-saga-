@@ -75,8 +75,16 @@ const handleResend = () => {
     setDemoOtp(randomOtp);
     setOtp(""); // clear input after resend
     toast.info("OTP Resent Successfully!");
+    // resetTimer();
 };
 
+ useEffect(() => {
+    if (otpMessage) {
+      toast.success(otpMessage);
+      setOtp(""); // clear input box
+    }
+  }, [otpMessage]);
+  
   return (
     <div className="modal show fade d-block" tabIndex="-1" role="dialog" style={{ background: "rgba(0,0,0,0.6)" }}>
       <div className="modal-dialog modal-dialog-centered" role="document">

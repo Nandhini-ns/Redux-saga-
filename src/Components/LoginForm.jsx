@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { loginRequest } from "../Redux_saga/Actions/Authlogin_Action";
+import { loginRequest,closeOtpModal } from "../Redux_saga/Actions/Authlogin_Action";
 import OtpModal from "./OtpModal";
 
 function LoginForm() {
@@ -107,7 +107,7 @@ function LoginForm() {
       </div>
 
       {/* OTP Modal */}
-      {otpSent && <OtpModal onClose={() => {}} />}
+      {otpSent && <OtpModal onClose={() => dispatch(closeOtpModal())} />}
     </div>
   );
 }
