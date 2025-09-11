@@ -1,33 +1,47 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchContainersRequest,
   deleteContainerRequest,
 } from "../Redux_saga/Actions/Table_Action";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ActiveTable() {
-    const dispatch = useDispatch();
-    const {containers, loading, error} = useSelector((state) => state.container);
-    const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+  const { containers, loading, error } = useSelector(
+    (state) => state.container
+  );
+  const [search, setSearch] = useState("");
+useEffect(() => {
+  const token = localStorage.getItem("authToken");
+  console.log("JWT Token:", token); // Check token
+  dispatch(fetchContainersRequest());
+}, [dispatch]);
 
-    //fetch container on mount
-    useEffect(() => {
-        dispatch(fetchContainersRequest());
-    },[dispatch]);
 
-    //handle delete
-    const handleDelete = (id) => {
-        if(window.confirm("Delete this record?")){
-            dispatch(deleteContainerRequest(id));
-        }
-    };
+  // const handleDelete = (id) => {
+  //   if (window.confirm("Delete this record?")) {
+  //     dispatch(deleteContainerRequest(id));
+  //     toast.success("Record deleted successfully!");
+  //   }
+  // };
 
-    //filter containers based on search
-    const filteredContainers = containers.filter((item) => item.containerNo.toLowerCase().includes(search.toLowerCase()));
-    
+   const handleView = (item) => {
+     dispatch(viewContainerRequest(item.id));
+    toast.info(`Viewing container: ${item.containerNo}`);
+  };
+
+  const handleEdit = (item) => {
+    toast.warning(`Editing container: ${item.containerNo}`);
+  };
+
+  const filteredContainers = search?containers.filter((item) =>
+    item.containerNo.toLowerCase().includes(search.toLowerCase())
+  ): containers;
+
   return (
-      <div className="container mt-5">
+    <div className="container mt-5">
       <h2 className="mb-4">Active Containers</h2>
 
       {/* Search + Download */}
@@ -45,7 +59,6 @@ function ActiveTable() {
       {loading && <p>Loading...</p>}
       {error && <p className="text-danger">{error}</p>}
 
-      {/* Table */}
       <table className="table table-bordered table-hover">
         <thead className="table-dark">
           <tr>
@@ -60,38 +73,40 @@ function ActiveTable() {
           </tr>
         </thead>
         <tbody>
-          {filteredContainers.map((item) => (
-            <tr key={item.id}>
-              <td>{item.containerNo}</td>
-              <td>{item.size}</td>
-              <td>{item.status}</td>
-              <td>{item.depot}</td>
-              <td>{item.location}</td>
-              <td>{item.pickup}</td>
-              <td>{item.depotIn}</td>
-              <td>
-                <button className="btn btn-info btn-sm me-2">View</button>
-                <button className="btn btn-warning btn-sm me-2">Edit</button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-          {filteredContainers.length === 0 && !loading && (
-            <tr>
-              <td colSpan="8" className="text-center">
-                No records found
-              </td>
-            </tr>
-          )}
-        </tbody>
+  {filteredContainers.map((item) => (
+    <tr key={item.id}>
+      <td>{item.containerNo}</td>
+      <td>{item.productType}</td>
+      <td>{item.status}</td>
+      <td>{item.currentDepo || "-"}</td>
+      <td>{item.currentLocation || "-"}</td>
+      <td>{item.pickUpDate || "-"}</td>
+      <td>{item.depotInDate || "-"}</td>
+      <td>
+        <button className="btn btn-info btn-sm me-2">View</button>
+        <button className="btn btn-warning btn-sm me-2">Edit</button>
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={() => handleDelete(item.id)}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+  {search && filteredContainers.length === 0 && !loading && (
+    <tr>
+      <td colSpan="8" className="text-center">
+        No records found
+      </td>
+    </tr>
+  )}
+</tbody>
+
       </table>
     </div>
   );
 }
 
 export default ActiveTable;
+

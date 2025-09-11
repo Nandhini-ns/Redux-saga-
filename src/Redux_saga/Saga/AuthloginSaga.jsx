@@ -71,15 +71,15 @@ function* handleOtpVerify(action) {
 
     if (response.data?.data?.isValidAccessCode) {
       yield put(otpVerifySuccess("OTP Verified Successfully!"));
-      toast.success("✅ OTP Verified Successfully!");
+      toast.success(" OTP Verified Successfully!");
     } else {
       yield put(otpVerifyFailure("Invalid OTP. Please try again."));
-      toast.error("❌ Invalid OTP. Please try again.");
+      toast.error("Invalid OTP. Please try again.");
     }
   } catch (error) {
     console.error("OTP verify error:", error.response || error);
     yield put(otpVerifyFailure("OTP Verification Failed"));
-     toast.error("⚠️ OTP Verification Failed, Try Again!");
+     toast.error(" OTP Verification Failed, Try Again!");
   }
 }
 
