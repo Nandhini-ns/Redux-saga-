@@ -33,6 +33,7 @@ function* handleLogin(action) {
 
     // store other info if backend returns opaque or userId
     const opaque = response.data?.data?.opaque;
+    console.log(opaque)
     if (opaque) localStorage.setItem("opaque", opaque);
 
     //  Dispatch login success
@@ -71,10 +72,10 @@ function* handleOtpVerify(action) {
 
     if (response.data?.data?.isValidAccessCode) {
       yield put(otpVerifySuccess("OTP Verified Successfully!"));
-      toast.success(" OTP Verified Successfully!");
+      toast.success(response.data?.data?.message || " OTP Verified Successfully!");
     } else {
       yield put(otpVerifyFailure("Invalid OTP. Please try again."));
-      toast.error("Invalid OTP. Please try again.");
+      toast.error(response.data?.data?.message || "Invalid OTP. Please try again.");
     }
   } catch (error) {
     console.error("OTP verify error:", error.response || error);
@@ -93,14 +94,29 @@ function* handleOtpResend() {
     }
 
     const payload = { opaque };
-
-    console.log(" Resend OTP payload:", payload, "JWT:", jwtToken);
+    console.log("Resend OTP payload:", payload, "JWT:", jwtToken);
 
     const response = yield call(resendOtpApi, payload, jwtToken);
 
-    console.log("Resend OTP response:", response.data);
+    console.log("Resend OTP response:", response.data?.data);
 
-    yield put(otpResendSuccess(response.data?.message || "OTP Resent Successfully"));
+    // 👇 API la vandha pudhusa values
+    const { opaque: newOpaque, accessCode: newAccessCode } =
+      response.data?.data || {};
+
+    // localStorage update
+    if (newOpaque) {
+      localStorage.setItem("opaque", newOpaque);
+    }
+
+    // success action -> both message + data send pannunga
+    yield put(
+      otpResendSuccess({
+        message: response.data?.message || "OTP Resent Successfully",
+        opaque: newOpaque,
+        accessCode: newAccessCode,
+      })
+    );
   } catch (error) {
     const errorMsg =
       error.response?.data?.error?.message ||
@@ -108,10 +124,10 @@ function* handleOtpResend() {
       error.message ||
       "OTP Resend Failed";
 
-   
     yield put(otpResendFailure(errorMsg));
   }
 }
+
 
 export default function* authloginSaga() {
   yield takeLatest(LOGIN_REQUEST, handleLogin);

@@ -106,7 +106,6 @@ function LoginForm() {
         </form>
       </div>
 
-      {/* OTP Modal */}
       {otpSent && <OtpModal onClose={() => dispatch(closeOtpModal())} />}
     </div>
   );

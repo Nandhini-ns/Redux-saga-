@@ -5,85 +5,100 @@ import{
     otpVerifyRequest,
     otpResendRequest,
 }from "../Redux_saga/Actions/Authlogin_Action";
+import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 // import "bootstrap/dist/css/bootstrap.min.css";
     function OtpModal({ onClose }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user, otpMessage, error } = useSelector((state) => state.auth);
+  const resend = useSelector((state)=> state.auth)
+  console.log(resend)
+
+  const state = useSelector(state => state.auth)
+  console.log(state)
+console.log(otpMessage)
 
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(30);
   const [disabled, setDisabled] = useState(true);
-  const [prefix, setPrefix] = useState("");
  
 
-  // Generate random letters
-  const generatePrefix = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    let text = "";
-    for (let i = 0; i < 4; i++) {
-      text += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setPrefix(text);
-  };
+useEffect(() => {
+ 
+  setOtp("");
+}, []);
 
-     const [demoOtp, setDemoOtp] = useState("");
+const [opaque, setOpaque] = useState(localStorage.getItem("opaque") || "");
+const [accessCode, setAccessCode] = useState(user?.data?.accessCode || "");
 
 useEffect(() => {
-  const randomOtp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
-  setDemoOtp(randomOtp);
-  setOtp("");
+  if (user?.data?.opaque) {
+    setOpaque(user?.data?.opaque);
+    console.log(setOpaque)
+  }
+  if (user?.data?.accessCode) {
+    setAccessCode(user?.data.accessCode);
+    console.log(setAccessCode)
+  }
+}, [user]);
+
+
+ useEffect(() => {
+  setDisabled(true);
+  setTimer(30);
+
+  const interval = setInterval(() => {
+    setTimer((prev) => {
+      if (prev === 1) {
+        setDisabled(false);
+        clearInterval(interval);
+        setOpaque("");
+        setAccessCode("");
+
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+
+  return () => clearInterval(interval);
 }, [otpMessage]);
 
+    useEffect(() => {
+  if (otpMessage) { 
+    toast.success(otpMessage);
+    setOtp("");
+    onClose();               
+    navigate("/activetable"); 
+  }
+}, [otpMessage, navigate, onClose]);
 
-  // Reset timer & prefix when modal loads or resend happens
-  useEffect(() => {
-    generatePrefix();
-    setDisabled(true);
-    setTimer(30);
-
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev === 1) {
-          setDisabled(false);
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [otpMessage]);
 
   
-
 const handleVerify = () => {
-  if (!otp) {
-   toast.error("Please enter OTP!");
-    return;
-  }
-dispatch(otpVerifyRequest({ accessCode: otp })); 
+ 
+dispatch(
+  otpVerifyRequest({ 
+    opaque: opaque,        
+    accessCode: otp.toString() 
+  })
+);
+
 setOtp("");
 };
 
 
 const handleResend = () => {
   dispatch(otpResendRequest()); 
-  // alert("OTP Resent Successfully!");
-   const randomOtp = Math.floor(100000 + Math.random() * 900000);
-    setDemoOtp(randomOtp);
-    setOtp(""); // clear input after resend
+  
+    setOtp(""); 
     toast.info("OTP Resent Successfully!");
-    // resetTimer();
+   
+    setDisabled(true); 
+    setTimer(30);
 };
 
- useEffect(() => {
-    if (otpMessage) {
-      toast.success(otpMessage);
-      setOtp(""); // clear input box
-    }
-  }, [otpMessage]);
   
   return (
     <div className="modal show fade d-block" tabIndex="-1" role="dialog" style={{ background: "rgba(0,0,0,0.6)" }}>
@@ -96,21 +111,32 @@ const handleResend = () => {
           <div className="modal-body text-center">
             <p className="text-muted">We have sent an OTP to your registered mobile/email</p>
 
-             <div className="alert alert-info">
-                <strong>Your OTP: </strong> {user?.data?.otp || demoOtp || "Not received"}
-             </div>
+<div className="alert alert-info">
+  <strong>Your OTP: </strong>
+  <input
+    type="text"
+    className="form-control d-inline-block w-auto ms-2"
+    value={accessCode || ""}
+    readOnly
+  />
+</div>
 
-            {/* Prefix + OTP input */}
-            <div className="input-group mb-3 justify-content-center">
-              <span className="input-group-text fw-bold">{prefix}</span>
-              <input
-                type="text"
-                className="form-control w-50"
-                placeholder="Enter OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-              />
-            </div>
+<div className="input-group mb-3 justify-content-center">
+  <input
+    type="text"
+    className="form-control fw-bold text-center w-25"
+    value={opaque}
+    readOnly
+  />
+  <input
+    type="text"
+    className="form-control w-50"
+    placeholder="Enter OTP"
+    value={otp}
+    onChange={(e) => setOtp(e.target.value)}
+  />
+</div>
+
 
             {/* Verify button */}
             <button className="btn btn-primary w-100 mb-3" onClick={handleVerify}>
@@ -127,7 +153,7 @@ const handleResend = () => {
                 Resend OTP
               </button>
               <span className="fw-semibold text-secondary">
-                {timer > 0 ? `00:${timer.toString().padStart(2, "0")}` : ""}
+                {timer > 0 ? `00:${timer.toString().padStart(2, "0")}` : "00:00"}
               </span>
             </div>
 

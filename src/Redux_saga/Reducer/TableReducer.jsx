@@ -16,17 +16,6 @@ const tableReducer = (state = initialState, action) => {
 
     case FETCH_CONTAINERS_FAILURE:
       return { ...state, loading: false, error: action.payload };
-    // case DELETE_CONTAINER_FAILURE:
-    //   return { ...state, loading: false, error: action.payload };
-
-    // case DELETE_CONTAINER_SUCCESS:
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     containers: state.containers.filter(
-    //       (item) => item.id !== action.payload
-    //     ),
-    //   };
       case CREATE_CONTAINER_SUCCESS:
        return { ...state, containers: [...state.containers, action.payload] };
      case CREATE_CONTAINER_FAILURE:

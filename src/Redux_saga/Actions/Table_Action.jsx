@@ -16,20 +16,6 @@ export const fetchContainersFailure = (error) => ({
   payload: error,
 });
 
-// // delete
-// export const deleteContainerRequest = (id) => ({
-//   type: DELETE_CONTAINER_REQUEST,
-//   payload: id,
-// });
-// export const deleteContainerSuccess = (id) => ({
-//   type: DELETE_CONTAINER_SUCCESS,
-//   payload: id,
-// });
-// export const deleteContainerFailure = (error) => ({
-//   type: DELETE_CONTAINER_FAILURE,
-//   payload: error,
-// });
-
 // Create
 export const createContainerRequest = (data) => ({
    type: CREATE_CONTAINER_REQUEST, 

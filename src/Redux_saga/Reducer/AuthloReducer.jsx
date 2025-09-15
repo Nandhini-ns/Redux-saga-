@@ -8,6 +8,7 @@ const initialState={
     error: null,
     otpSent: false,
     otpMessage: null,
+    otpResend:null,
 };
 
   const AuthloReducer = (state = initialState, action)=>{
@@ -33,10 +34,21 @@ const initialState={
                 return{...state, loading: false, error: action.payload};
 
             case OTP_RESEND_REQUEST:
-                return{...state, loading: true, error:null, otpMessage:null};
+                return{...state, loading: true, error:null,otpResend :null};
 
-            case OTP_RESEND_SUCCESS:
-                return{...state, loading:false, otpMessage: action.payload};
+case OTP_RESEND_SUCCESS:
+  return {
+    ...state,
+    loading: false,
+    otpMessage: action.payload.message,
+    user: {
+      ...state.user,
+      opaque: action.payload.opaque,
+      accessCode: action.payload.accessCode,
+    },
+  };
+
+
 
             case OTP_RESEND_FAILURE:
                 return{...state, loading:false, error:action.payload};
