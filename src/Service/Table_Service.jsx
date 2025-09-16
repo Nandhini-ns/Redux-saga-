@@ -26,14 +26,6 @@ const payload = {
   });
 };
 
-// // Delete container
-// export const deleteContainerApi = (id) =>
-//   axios.delete(`${BASE_URL}/container/${id}`, {
-//     headers: {
-//       "authorization": `BslogiKey ${localStorage.getItem("authToken")}`,
-//     },
-//   });
-
 // Create Container
 export const createContainerApi = (data) => {
   const token = localStorage.getItem("authToken");
