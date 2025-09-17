@@ -29,7 +29,7 @@ function LoginForm() {
     let isValid = true;
 
     if (!username.trim()) {
-      setUsernameError("Username is required");
+      setUsernameError("User Name is required");
       isValid = false;
     } else setUsernameError("");
 
@@ -55,12 +55,13 @@ function LoginForm() {
           {/* Username */}
           <div className="mb-3">
             <label className="form-label">User Name</label>
-            <div className="input-group">
+            <div className="input-group has-validation">
               <span className="input-group-text">
                 <i className="bi bi-person"></i>
               </span>
               <input
                 type="text"
+                placeholder="Enter User Name"
                 className={`form-control ${usernameError ? "is-invalid" : ""}`}
                 value={username}
                 onChange={(e) => {
@@ -75,9 +76,13 @@ function LoginForm() {
           {/* Password */}
           <div className="mb-3">
             <label className="form-label">Password</label>
-            <div className="input-group">
+            <div className="input-group has-validation">
+              <span className="input-group-text">
+                <i className="bi bi-lock"></i>
+              </span>
               <input
                 type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
                 className={`form-control ${passwordError ? "is-invalid" : ""}`}
                 value={password}
                 onChange={(e) => {

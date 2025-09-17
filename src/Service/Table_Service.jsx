@@ -27,21 +27,12 @@ const payload = {
 };
 
 // Create Container
-export const createContainerApi = (data) => {
-  const token = localStorage.getItem("authToken");
-  return axios.post(`${BASE_URL}`, data, {
-    headers: {
-      "Content-Type": "application/json",
-      "authorization": `BslogiKey ${token}`,
-      "Aid": "86f15c81-66d3-4237-bb29-6c4e7a9daacf",
-    },
-  });
-};
+
 
 //View Container by ID
 export const viewContainerApi = (id) => {
   const token = localStorage.getItem("authToken");
-  return axios.get(`${BASE_URL}/${id}`, {
+  return axios.get(`${BASE_URL}/container/fetch-booking-history/${id}`, {
     headers: {
       "authorization": `BslogiKey ${token}`,
       "Aid": "86f15c81-66d3-4237-bb29-6c4e7a9daacf",

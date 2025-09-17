@@ -19,9 +19,10 @@ import { useNavigate } from "react-router-dom";
 function ActiveTable() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { containers, loading, error } = useSelector(
+  const { containers, loading, error, selectedContainer } = useSelector(
     (state) => state.container
   );
+  console.log(selectedContainer)
   const [search, setSearch] = useState("");
 useEffect(() => {
   const token = localStorage.getItem("authToken");
@@ -34,6 +35,7 @@ useEffect(() => {
 }, [dispatch,navigate]);
 
  const [dropdownOpen, setDropdownOpen] = useState(false);
+ const [showModal, setShowModal] = useState(false);
 
 const handleLogout = () => {
   localStorage.removeItem("authToken");
@@ -43,6 +45,7 @@ const handleLogout = () => {
 
    const handleView = (item) => {
      dispatch(viewContainerRequest(item.id));
+      setShowModal(true);
     toast.info(`Viewing container: ${item.containerNo}`);
   };
 
@@ -60,7 +63,7 @@ const handleLogout = () => {
       currentDepo: "CHENNAI",
     };
     dispatch(createContainerRequest(newData));
-    toast.success("New container created!");
+    
   };
 
   // Search across all fields
@@ -120,7 +123,7 @@ const handleLogout = () => {
 </div>
 
 
-      {/* Controls */}
+     
       <div className="d-flex justify-content-between align-items-center mb-3">
         <button className="btn btn-success" onClick={handleCreate}>
           <FontAwesomeIcon icon={faPlusCircle} /> New Container
@@ -225,6 +228,180 @@ const handleLogout = () => {
           </tbody>
         </table>
       </div>
+       {/* Modal for container details */}
+      {/* {showModal && selectedContainer && (
+        <div
+          className="modal fade show d-block"
+          tabIndex="-1"
+          style={{ background: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Container Booking Details</h5>
+                <button
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <table className="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <th>Container No</th>
+                      <td>{selectedContainer?.data?.containerNo}</td>
+                    </tr>
+                    <tr>
+                      <th>Depot</th>
+                      <td>{selectedContainer?.data?.currentDepo}</td>
+                    </tr>
+                    <tr>
+                      <th>Status</th>
+                      <td>{selectedContainer?.data?.status}</td>
+                    </tr>
+                    <tr>
+                      <th>Type</th>
+                      <td>{selectedContainer?.data?.containerType}</td>
+                    </tr>              
+                    <tr>
+                      <th>Location</th>
+                    <td>{selectedContainer?.data?.currentLocation || "-"}</td>
+                    </tr>
+                   <tr>
+                    <th>Shipper/Consignee</th>
+                     <td>{selectedContainer?.data?.shipperConsignee || "-"}</td>
+                   </tr>
+                   <tr>
+                    <th>Pickup Date</th>
+                      <td>{selectedContainer?.data?.pickUpDate || "-"}</td>
+                    </tr>
+                    <tr>
+            <th>Depot In</th>
+            <td>{selectedContainer?.data?.depotInDate || "-"}</td>
+             </tr>
+             <tr>
+              <th>VSL/VOY</th>
+               <td>{selectedContainer?.data?.vesselVoyage || "-"}</td>
+              </tr>
+             <tr>
+               <th>SOB</th>
+                <td>{selectedContainer?.data?.sobDate || "-"}</td>
+               </tr>
+                <tr>
+                <th>ATA</th>
+                 <td>{selectedContainer?.data?.ataDate || "-"}</td>
+                </tr>
+                 <tr>
+                 <th>Tare Weight</th>
+                 <td>{selectedContainer?.data?.tareWeight || "-"}</td>
+                 </tr>
+                 <tr>
+                  <th>Max Gross Weight</th>
+                   <td>{selectedContainer?.data?.maxGrossWeight || "-"}</td>
+                  </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      )} */}
+
+      {/* Modal for container details */}
+{showModal && selectedContainer && (
+  <div
+    className="modal fade show d-block"
+    tabIndex="-1"
+    style={{ background: "rgba(0,0,0,0.5)" }}
+  >
+    <div className="modal-dialog modal-xl">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Container Booking Details</h5>
+          <button
+            className="btn-close"
+            onClick={() => setShowModal(false)}
+          ></button>
+        </div>
+
+        <div className="modal-body">
+          {/* Container Info Card */}
+          <div className="card mb-3 shadow-sm">
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-6">
+                  <p><strong>Container No:</strong> {selectedContainer?.data?.containerNo}</p>
+                  <p><strong>Type:</strong> {selectedContainer?.data?.containerType}</p>
+                  <p><strong>Current Depot:</strong> {selectedContainer?.data?.currentDepo}</p>
+                  <p><strong>Location:</strong> {selectedContainer?.data?.currentLocation || "-"}</p>
+                </div>
+                {/* <div className="col-md-6">
+                  <p><strong>Status:</strong> {selectedContainer?.data?.status}</p>
+                  <p><strong>Shipper/Consignee:</strong> {selectedContainer?.data?.shipperConsignee || "-"}</p>
+                  <p><strong>Tare Weight:</strong> {selectedContainer?.data?.tareWeight || "-"}</p>
+                  <p><strong>Max Gross Weight:</strong> {selectedContainer?.data?.maxGrossWeight || "-"}</p>
+                </div> */}
+              </div>
+            </div>
+          </div>
+
+          {/* Booking Table */}
+          <h6 className="mb-3">Booking Details</h6>
+          <div className="table-responsive">
+            <table className="table table-bordered table-striped">
+              <thead className="table-light">
+                <tr>
+                  <th>S.No</th>
+                  <th>Booking Date</th>
+                  <th>Booking No</th>
+                  <th>BL No</th>
+                  <th>POL</th>
+                  <th>Pickup Date</th>
+                  <th>Port In Date</th>
+                  <th>SOB Date</th>
+                  <th>ATA Date</th>
+                  <th>Depot In Date</th>
+                  <th>POD</th>
+                  <th>Booking Agent</th>
+                  <th>Delivery Agent</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedContainer?.data?.bookings?.length > 0 ? (
+                  selectedContainer.data.bookings.map((booking, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{booking.bookingDate || "-"}</td>
+                      <td>{booking.bookingNo || "-"}</td>
+                      <td>{booking.blNo || "-"}</td>
+                      <td>{booking.pol || "-"}</td>
+                      <td>{booking.pickUpDate || "-"}</td>
+                      <td>{booking.portInDate || "-"}</td>
+                      <td>{booking.sobDate || "-"}</td>
+                      <td>{booking.ataDate || "-"}</td>
+                      <td>{booking.depotInDate || "-"}</td>
+                      <td>{booking.pod || "-"}</td>
+                      <td>{booking.bookingAgent || "-"}</td>
+                      <td>{booking.deliveryAgent || "-"}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="13" className="text-center">
+                      No Booking Records Found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
 
   );

@@ -3,5 +3,5 @@ import watchLoginSaga from "../Saga/AuthloginSaga";
 import tableSaga from "../Saga/TableSaga";
 
 export default function* rootSaga() {
-  yield all([watchLoginSaga(),tableSaga()]);
+  yield all([watchLoginSaga(),tableSaga() ]);
 }

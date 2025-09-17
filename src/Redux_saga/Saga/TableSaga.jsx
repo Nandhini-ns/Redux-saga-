@@ -27,14 +27,14 @@ function* fetchContainersSaga() {
   }
 }  
  // Create
-function* createContainerSaga(action) {
-  try {
-    const response = yield call(createContainerApi, action.payload);
-    yield put(createContainerSuccess(response.data));
-  } catch (error) {
-    yield put(createContainerFailure(error.message));
-  }
-}
+// function* createContainerSaga(action) {
+//   try {
+//     const response = yield call(createContainerApi, action.payload);
+//     yield put(createContainerSuccess(response.data));
+//   } catch (error) {
+//     yield put(createContainerFailure(error.message));
+//   }
+// }
 
 // View
 function* viewContainerSaga(action) {
@@ -61,7 +61,7 @@ function* editContainerSaga(action) {
 export default function* tableSaga() {
     yield takeLatest(FETCH_CONTAINERS_REQUEST, fetchContainersSaga);
   // yield takeLatest(DELETE_CONTAINER_REQUEST, handleDeleteContainer);
-  yield takeLatest(CREATE_CONTAINER_REQUEST, createContainerSaga);
+  // yield takeLatest(CREATE_CONTAINER_REQUEST, createContainerSaga);
   yield takeLatest(VIEw_CONTAINER_REQUEST, viewContainerSaga);
   yield takeLatest(EDIT_CONTAINER_REQUEST, editContainerSaga);
 }

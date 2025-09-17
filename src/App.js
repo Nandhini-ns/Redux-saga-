@@ -4,9 +4,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LoginForm from './Components/LoginForm';
 import OtpModal from "./Components/OtpModal";
 import ActiveTable from './Components/ActiveTable';
+// import ContainerModal from "./Components/ContainerModal";
 // Import Toastify
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ContainerModal from './Components/ContainerModal';
 
 
 function App() {
@@ -16,7 +18,8 @@ function App() {
         <Routes>
           <Route path='/loginform' element={<LoginForm />} />
           <Route path='/otpmodal' element={<OtpModal />} />
-                <Route path='/activetable' element={<ActiveTable />} />
+          <Route path='/activetable' element={<ActiveTable />} />
+          <Route path='/containermodal' element={<ContainerModal/>} />
         </Routes>
       </BrowserRouter>
 
