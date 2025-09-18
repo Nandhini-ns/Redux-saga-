@@ -41,14 +41,27 @@ export const viewContainerApi = (id) => {
 };
 
 // Edit Container by ID
+// export const editContainerApi = (id, updatedData) => {
+//   const token = localStorage.getItem("authToken");
+//   return axios.put(`${BASE_URL}/container/get/${id}`, updatedData, {
+//     headers: {
+//       "Content-Type": "application/json",
+//       "authorization": `BslogiKey ${token}`,
+//       "Aid": "86f15c81-66d3-4237-bb29-6c4e7a9daacf",
+//     },
+//   });
+// };
+
 export const editContainerApi = (id, updatedData) => {
   const token = localStorage.getItem("authToken");
-  return axios.put(`${BASE_URL}/${id}`, updatedData, {
+
+  return axios.put(`${BASE_URL}/container/update/${id}`, updatedData, {
     headers: {
       "Content-Type": "application/json",
       "authorization": `BslogiKey ${token}`,
-      "Aid": "86f15c81-66d3-4237-bb29-6c4e7a9daacf",
+      "aid": "86f15c81-66d3-4237-bb29-6c4e7a9daacf",
     },
   });
 };
+
 

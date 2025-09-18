@@ -55,6 +55,7 @@ const handleLogout = () => {
     toast.warning(`Editing container: ${item.containerNo}`);
   };
 
+  // const [isEditMode, setIsEditMode] = useState(false);
    const handleCreate = () => {
     const newData = {
       containerNo: "NEW12345",
@@ -83,7 +84,6 @@ const handleLogout = () => {
       {/* Top bar */}
       <div className="d-flex justify-content-between align-items-center bg-primary text-white p-3 rounded mb-3">
        <h4 className="m-0">Active Containers</h4>
-  
 
   {/* User profile dropdown */}
   <div className="position-relative">
@@ -401,8 +401,69 @@ const handleLogout = () => {
     </div>
   </div>
 )}
+   
+   {/* {showManageModal && (
+  <div
+    className="modal fade show d-block"
+    tabIndex="-1"
+    style={{ background: "rgba(0,0,0,0.5)" }}
+  >
+    <div className="modal-dialog modal-md">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">
+            {isEditMode ? "Edit Container" : "New Container"}
+          </h5>
+          <button
+            className="btn-close"
+            onClick={() => setShowManageModal(false)}
+          ></button>
+        </div>
 
+        <div className="modal-body">
+          {[
+            { label: "Container No", name: "containerNo" },
+            { label: "Container Type", name: "containerType" },
+            { label: "Choose Product Type", name: "productType" },
+            { label: "Current Location", name: "currentLocation" },
+            { label: "Current Depot", name: "currentDepo" },
+            { label: "Principal", name: "principal" },
+            { label: "YOM", name: "yom" },
+            { label: "Tare Weight", name: "tareWeight" },
+            { label: "Max Gross Weight", name: "maxGrossWeight" },
+            { label: "Choose Status", name: "status" },
+            { label: "Grade", name: "grade" },
+            { label: "Notes", name: "notes" },
+          ].map((field, idx) => (
+            <div className="mb-3" key={idx}>
+              <label className="form-label">{field.label}</label>
+              <input
+                type="text"
+                name={field.name}
+                value={formData[field.name] || ""}
+                onChange={handleFormChange}
+                className="form-control border-0 border-bottom"
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="modal-footer">
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowManageModal(false)}
+          >
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={handleSubmit}>
+            {isEditMode ? "Update" : "Submit"}
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+)} */}
+ </div>
 
   );
 }
