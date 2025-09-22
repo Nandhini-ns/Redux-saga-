@@ -40,7 +40,8 @@ function LoginForm() {
 
     if (!isValid) return;
 
-    dispatch(loginRequest({ userName: username, password }));
+    dispatch(loginRequest({origin: "AGENT", userName: username, password }));
+    console.log({origin: "AGENT", userName: username, password })
 
     setUsername("");
     setPassword("");
@@ -55,14 +56,15 @@ function LoginForm() {
           {/* Username */}
           <div className="mb-3">
             <label className="form-label">User Name</label>
-            <div className="input-group has-validation">
+            <div className="input-group position-relative">
               <span className="input-group-text">
                 <i className="bi bi-person"></i>
               </span>
               <input
                 type="text"
                 placeholder="Enter User Name"
-                className={`form-control ${usernameError ? "is-invalid" : ""}`}
+                className={`form-control ${usernameError ? "border-danger" : ""}`}
+                style={{ paddingRight: "40px" }}
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value);
@@ -70,35 +72,35 @@ function LoginForm() {
                 }}
               />
             </div>
-            {usernameError && <div className="text-danger mt-1">{usernameError}</div>}
+            {usernameError && <div className="text-danger ">{usernameError}</div>}
           </div>
 
           {/* Password */}
           <div className="mb-3">
             <label className="form-label">Password</label>
-            <div className="input-group has-validation">
-              <span className="input-group-text">
+            <div className="input-group position-relative">
+              <span className="input-group-text rounded-start">
                 <i className="bi bi-lock"></i>
               </span>
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
-                className={`form-control ${passwordError ? "is-invalid" : ""}`}
+                className={`form-control rounded-end ${passwordError ? "border-danger" : ""}`}
+                 style={{ paddingRight: "40px" }}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                   if (e.target.value.trim()) setPasswordError("");
                 }}
               />
-              <span
-                className="input-group-text"
-                style={{ cursor: "pointer" }}
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                <i className={showPassword ? "bi bi-eye" : "bi bi-eye-slash"}></i>
-              </span>
+                <i className={showPassword ? "bi bi-eye" : "bi bi-eye-slash"}
+                style={{ cursor: "pointer", position: "absolute",
+                 right: "10px",
+                 top: "50%", 
+                 transform: "translateY(-50%)",  color: "#6c757d", zIndex: 5}}
+                onClick={() => setShowPassword(!showPassword)}></i>
             </div>
-            {passwordError && <div className="text-danger mt-1">{passwordError}</div>}
+            {passwordError && <div className="text-danger ">{passwordError}</div>}
           </div>
 
           {/* Submit */}

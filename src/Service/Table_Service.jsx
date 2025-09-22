@@ -1,7 +1,7 @@
 
 import axios from "axios";
 
-const BASE_URL = "https://hastin-container.com/staging/api";
+const BASE_URL = "https://91.203.132.120/staging/api";
 
 export const fetchContainersApi = () => {
   const token = localStorage.getItem("authToken");

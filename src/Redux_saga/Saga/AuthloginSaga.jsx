@@ -33,7 +33,7 @@ function* handleLogin(action) {
 
     // store other info if backend returns opaque or userId
     const opaque = response.data?.data?.opaque;
-    console.log(opaque)
+    console.log(opaque) 
     if (opaque) localStorage.setItem("opaque", opaque);
 
     //  Dispatch login success
@@ -45,14 +45,15 @@ function* handleLogin(action) {
     console.log("OTP sent action dispatched, modal should open");
   } catch (error) {
     // Catch any errors and log fully
-    const errorMsg =
-      error.response?.data?.error?.message ||
-      error.response?.data?.message ||
-      error.message ||
-      "Login Failed";
+    // const errorMsg =
+    //   error.response?.data?.error?.message ||
+    //   error.response?.data?.message ||
+    //   error.message ||
+    //   "Login Failed";
 
-    console.error("Login error:", errorMsg);
-    yield put(loginFailure(errorMsg));
+    // console.error("Login error:", errorMsg);
+    // yield put(loginFailure(errorMsg));
+     yield put(loginFailure(error.response?.data || error.message));
   }
 }
 
@@ -63,7 +64,7 @@ function* handleOtpVerify(action) {
     const opaque = localStorage.getItem("opaque");
     const accessCode = action.payload?.accessCode; // from input
 
-    console.log("Verifying OTP with payload:", { opaque, accessCode }, "JWT:", jwtToken);
+    // console.log("Verifying OTP with payload:", { opaque, accessCode }, "JWT:", jwtToken);
 
     const payload = { opaque, accessCode };
 
@@ -94,16 +95,18 @@ function* handleOtpResend() {
     }
 
     const payload = { opaque };
-    console.log("Resend OTP payload:", payload, "JWT:", jwtToken);
+    // console.log("Resend OTP payload:", payload, "JWT:", jwtToken);
 
     const response = yield call(resendOtpApi, payload, jwtToken);
 
-    console.log("Resend OTP response:", response.data?.data);
+    // console.log("Resend OTP response:", response.data?.data);
 
     // 👇 API la vandha pudhusa values
     const { opaque: newOpaque, accessCode: newAccessCode } =
       response.data?.data || {};
 
+      console.log(opaque)
+      console.log(newAccessCode)
     // localStorage update
     if (newOpaque) {
       localStorage.setItem("opaque", newOpaque);
@@ -119,10 +122,8 @@ function* handleOtpResend() {
     );
   } catch (error) {
     const errorMsg =
-      error.response?.data?.error?.message ||
-      error.response?.data?.message ||
-      error.message ||
-      "OTP Resend Failed";
+      error.response?.data?.error?.message ;
+
 
     yield put(otpResendFailure(errorMsg));
   }

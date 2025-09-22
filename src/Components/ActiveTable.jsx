@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useNavigate } from "react-router-dom";
+import ContainerModal from "./ContainerModal"; 
 
 function ActiveTable() {
   const dispatch = useDispatch();
@@ -56,15 +57,22 @@ const handleLogout = () => {
   };
 
   // const [isEditMode, setIsEditMode] = useState(false);
-   const handleCreate = () => {
-    const newData = {
-      containerNo: "NEW12345",
-      productType: "20FT",
-      status: "ACTIVE",
-      currentDepo: "CHENNAI",
-    };
-    dispatch(createContainerRequest(newData));
+  //  const handleCreate = () => {
+  //   const newData = {
+  //     containerNo: "NEW12345",
+  //     productType: "20FT",
+  //     status: "ACTIVE",
+  //     currentDepo: "CHENNAI",
+  //   };
+  //   dispatch(createContainerRequest(newData));
     
+  // };
+
+  //create containermodal
+  const [showManageModal, setShowManageModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setShowManageModal(true); // modal open
   };
 
   // Search across all fields
@@ -118,16 +126,17 @@ const handleLogout = () => {
           <FontAwesomeIcon icon={faRightFromBracket} className="me-2" /> Logout
         </button>
       </div>
-    )}
-  </div>
-</div>
-
-
-     
+       )}
+      </div>
+    </div>   
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <button className="btn btn-success" onClick={handleCreate}>
-          <FontAwesomeIcon icon={faPlusCircle} /> New Container
-        </button>
+     <button
+  className="btn btn-success"
+  onClick={() => navigate("/containermodal")}
+>
+  <FontAwesomeIcon icon={faPlusCircle} /> New Container
+</button>
+
 
         <div className="d-flex align-items-center gap-2">
           <input

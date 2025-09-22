@@ -30,7 +30,9 @@ useEffect(() => {
 }, []);
 
 const [opaque, setOpaque] = useState(localStorage.getItem("opaque") || "");
+
 const [accessCode, setAccessCode] = useState(user?.data?.accessCode || "");
+console.log(accessCode)
 
 useEffect(() => {
   if (user?.data?.opaque) {
@@ -81,9 +83,10 @@ const handleVerify = () => {
 dispatch(
   otpVerifyRequest({ 
     opaque: opaque,        
-    accessCode: otp.toString() 
+    accessCode: Number(otp) // convert string input to number
   })
-);
+)
+
 
 setOtp("");
 };

@@ -38,3 +38,26 @@
 //     }
 //   );
 // };
+
+import axios from "axios";
+
+const BASE_URL = "https://91.203.132.120/staging/api";
+const TOKEN = localStorage.getItem("authToken");
+
+const headers = {
+  "Content-Type": "application/json",
+  "authorization": `BslogiKey ${TOKEN}`,
+  "Aid": "86f15c81-66d3-4237-bb29-6c4e7a9daacf",
+};
+
+// Fetch Groups 
+export const fetchContainerGroupsApi = async () => {
+  const res = await axios.get(`${BASE_URL}/container-group/get`, { headers });
+  return res.data;
+};
+
+// Fetch Ports / Locations 
+export const fetchPortsApi = async () => {
+  const res = await axios.get(`${BASE_URL}/port/all`, { headers });
+  return res.data;
+};

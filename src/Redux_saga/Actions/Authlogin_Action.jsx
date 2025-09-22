@@ -21,14 +21,14 @@ export const otpSent =() =>({
   type:OTP_SENT,
 });
 
-export const otpVerifyRequest =(otpData) =>({
+export const otpVerifyRequest =(payload) =>({
   type: OTP_VERIFY_REQUEST,
-  payload: otpData,
+  payload,
 });
 
-export const otpVerifySuccess = (message) => ({
+export const otpVerifySuccess = (data) => ({
   type: OTP_VERIFY_SUCCESS,
-  payload: message,
+  payload: data,
 });
 
 export const otpVerifyFailure = (error) => ({

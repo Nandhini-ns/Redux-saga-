@@ -1,4 +1,4 @@
-import { CREATE_CONTAINER_FAILURE, CREATE_CONTAINER_REQUEST, CREATE_CONTAINER_SUCCESS, EDIT_CONTAINER_FAILURE, EDIT_CONTAINER_REQUEST, EDIT_CONTAINER_SUCCESS, FETCH_CONTAINERS_FAILURE, FETCH_CONTAINERS_REQUEST, FETCH_CONTAINERS_SUCCESS, VIEW_CONTAINER_FAILURE, VIEw_CONTAINER_REQUEST, VIEW_CONTAINER_SUCCESS } from "../Types/Table_Types";
+import {  EDIT_CONTAINER_FAILURE, EDIT_CONTAINER_REQUEST, EDIT_CONTAINER_SUCCESS, FETCH_CONTAINERS_FAILURE, FETCH_CONTAINERS_REQUEST, FETCH_CONTAINERS_SUCCESS, VIEW_CONTAINER_FAILURE, VIEw_CONTAINER_REQUEST, VIEW_CONTAINER_SUCCESS } from "../Types/Table_Types";
 
 // fetch
 
@@ -17,15 +17,7 @@ export const fetchContainersFailure = (error) => ({
 });
 
 // Create
-export const createContainerRequest = (data) => ({
-   type: CREATE_CONTAINER_REQUEST, 
-   payload: data });
-export const createContainerSuccess = (data) => ({ 
-  type: CREATE_CONTAINER_SUCCESS, 
-  payload: data });
-export const createContainerFailure = (error) => ({
-   type: CREATE_CONTAINER_FAILURE, 
-   payload: error });
+
 
 export const viewContainerRequest = (id) => ({ 
   type: VIEw_CONTAINER_REQUEST,

@@ -16,10 +16,7 @@ const tableReducer = (state = initialState, action) => {
 
     case FETCH_CONTAINERS_FAILURE:
       return { ...state, loading: false, error: action.payload };
-      case CREATE_CONTAINER_SUCCESS:
-       return { ...state, containers: [...state.containers, action.payload] };
-     case CREATE_CONTAINER_FAILURE:
-       return { ...state, error: action.payload };
+      
 
       case VIEW_CONTAINER_SUCCESS:
       return { ...state, selectedContainer: action.payload };
